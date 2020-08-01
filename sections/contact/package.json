@@ -6,12 +6,13 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "gatsby develop"
-
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "gatsby": "^2.24.23",
+    "mailgun-js": "^0.22.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   }
