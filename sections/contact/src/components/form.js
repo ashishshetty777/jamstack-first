@@ -5,20 +5,25 @@ const INITIAL_STATE = {
     name: '',
     email: '',
     subject: '',
-    body: ''
+    body: '',
+    status: 'IDLE'
 }
 
 const reducer = (state, action) => {
     switch (action.type) {
         case 'updateFieldValue' :
             return { ...state, [action.field] : action.value}
-
+        case 'updateStatus':
+            return {...state, status: action.status}
+        
+        case 'reset':
         default :
         return INITIAL_STATE
     }
 }
 const Form = () => {
     const [state, dispatch] = React.useReducer(reducer, INITIAL_STATE);
+    const {name, email, subject, body, status} = state;
 
     const updateFieldValue = field => event => {
         dispatch({
@@ -28,14 +33,36 @@ const Form = () => {
         })
     } 
 
-    const {name, email, subject, body} = state;
+    const setStatus = (status) => dispatch({type: 'updateStatus', status});
+
     const handleSubmit = (event) => {
         event.preventDefault();
+        setStatus('PENDING')
         console.log(state)
+        setTimeout(()=> setStatus('SUCCESS'), 3000)
     }
 
+    if(status === "SUCCESS") {
+        return (
+            <p className={styles.success}>
+                Message Sent!
+                <button
+                    type='reset'
+                    className={`${styles.button} ${styles.centered}`}
+                    onClick={()=> dispatch({type: 'reset'})}> Reset </button>
+            </p>
+        )
+    } 
+
     return (
-        <form className={styles.form} onSubmit={handleSubmit}>
+        <> 
+        {
+            status === "ERROR"  &&  
+            <p className={styles.error}>
+                Something went wrong! Please try again.
+            </p>
+        }
+        <form className={`${styles.form} ${status === 'PENDING' && styles.pending}`} onSubmit={handleSubmit}>
             <label className={styles.label}>
                 Name
                 <input className={styles.input} type='text' name='name' value={name} onChange={updateFieldValue('name')}/ >
@@ -54,6 +81,7 @@ const Form = () => {
             </label>
             <button className={styles.button}>Send</button>
         </form>
+        </>
     )
 }
 
