@@ -38,8 +38,19 @@ const Form = () => {
     const handleSubmit = (event) => {
         event.preventDefault();
         setStatus('PENDING')
-        console.log(state)
-        setTimeout(()=> setStatus('SUCCESS'), 3000)
+        fetch('api/contact', {
+            method: 'POST',
+            body: JSON.stringify(state)
+        })
+        .then(res => res.json())
+        .then(res => {
+            console.log(res, 'ooo');
+            setStatus('SUCCESS')
+        })
+        .catch(error => {
+            console.error(error);
+            setStatus('ERROR')
+        })
     }
 
     if(status === "SUCCESS") {
